@@ -18,7 +18,7 @@ Also use the format
 
 * Code Analysis and Refactoring 
   > We will use the principles such as coupling, cohesion, delegation vs. inheritance, assignment of responsibilities, elimination of bad code smells.
-  - [ ] Analysis of the strengths and weaknesses of the code (narrative + table) 
+  - [ ] Analysis of the strengths and weaknesses of the code (narrative + table) (sh | 30)
   - [ ] UML class diagram of the initial design. 
   - [ ] UML diagrams (sequence diagram) to provide insights to key static and dynamic characteristics of the program before and after refactoring.
   - [ ] Table of each class of the design and its responsibility
