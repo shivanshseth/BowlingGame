@@ -1,0 +1,394 @@
+@startuml
+    skinparam BackgroundColor #FFFFE0
+    skinparam Style strictuml
+    skinparam Padding 1
+
+    package Lane <<Folder>> #DDDDDD {
+        class Lane {
+            party: Party 
+            setter: Pinsetter 
+            scores: HashMap 
+            subscribers: Vector 
+
+            partyAssigned: boolean 
+            gameFinished: boolean 
+            bowlerIterator: Iterator 
+            ball: int 
+            bowlIndex: int 
+            frameNumber: int 
+            tenthFrameStrike: boolean 
+
+            curScores: int[] 
+            cumulScores: int[][] 
+            finalScores: int[][] 
+
+            gameNumber: int 
+            currentThrower: Bowler 
+
+
+            run()
+            receivePinsetterEvent()
+            resetBowlerIterator()
+            resetScores()
+            assignParty()
+            markScore()
+            lanePublish()
+            getScore()
+            pauseGame()
+            unPauseGame()
+        }
+
+        class LaneEvent {
+            p: Party 
+            frame: int 
+            ball: int 
+            bowler: Bowler 
+            cumulScore: int[][] 
+            score: HashMap 
+            index: int 
+            frameNum: int 
+            curScores: int[] 
+            mechProb: boolean 
+
+            ---- getter ----
+            isMechanicalProblem()   
+            getFrameNum()
+            getScore()
+            getCurScores()
+            getIndex()
+            getFrame()
+            getBall()
+            getCumulScore()
+            getParty()
+            getBowler()
+        }
+    }
+
+    package Pinsetter <<Folder>> #DDDDDD {
+        class Pinsetter {
+            rnd: Random 
+            subscribers: Vector 
+            pins: boolean[] 
+            foul: boolean 
+            throwNumber: int 
+
+
+            sendEvent()
+            ballThrown()
+            reset()
+            subscribe()
+        }
+
+        class PinsetterEvent {
+            pinsStillStanding: boolean[] 
+            foulCommited: boolean 
+            throwNumber: int 
+            pinsDownThisThrow: int 
+
+
+            pinKnockedDown()
+            pinsDownThisThrow()
+            isFoulCommited()
+            getThrowNumber()
+        }
+    }
+    package ControlDesk <<Folder>> #DDDDDD {
+        class ControlDesk {
+            Lanes: HashSet 
+            partyQueue: Queue 
+            numLanes: int 
+            subscribers: Vector 
+
+            run()
+            registerPatron()
+            assignLane()
+            viewScore()
+            subscribe()
+            publish()
+            addPartyQueue()
+            getPartyQueue()
+            getNumLanes()
+        }
+
+        class ControlDeskEvent {
+            partyQueue: Vector 
+            
+            getPartyQueue()
+        }
+    }
+    class Party {
+        myBowlers: Vector 
+        
+        getMembers()
+    }
+    package Bowler <<folder>> #DDDDDD {
+        class Bowler {
+            fullName: String 
+            nickName: String 
+            email: String 
+
+            getFullName()
+            getNickName()
+            getEmail()
+            equals()
+        }
+
+        class BowlerFile {
+            BOWLER_DAT: String 
+
+            getBowlerInfo()
+            putBowlerInfo()
+            getBowlers()
+        }
+    }
+    package ScoreHandling <<Folder>> #DDDDDD {
+        class Score {
+            nick: String 
+            date: String 
+            score: String 
+            ---- getter ----
+            getNickName()
+            getDate()
+            getScore()
+            ----
+            toString()
+        }
+
+        class ScoreReport {
+            content: String 
+
+            sendEmail()
+            sendPrintout()
+            sendln()
+        }
+
+        class ScoreHistoryFile {
+            SCOREHISTORY_DAT: String 
+            
+            addScore()
+            getScore()
+        }
+    }
+
+    package Views <<folder>> #DDDDDD {
+        class AddPartyView {
+            maxSize: int
+            win: JFrame
+            addPatron: JButton
+            newPatron: JButton
+            remPatron: JButton
+            finished: JButton
+            party: Vector
+            bowlerdb: Vector
+            lock: Integer
+            controlDesk: ControlDesk
+            selectedNick: String
+            selectedMember: String
+
+            actionPerformed()
+            valueChanged()
+            updateNewPatron()
+            getNames()
+            getParty()
+        }
+
+        class ControlDeskView {
+            addParty: JButton
+            finished: JButton
+            assigned: JButton
+            win: JFrame
+            partyList: JList
+            maxMembers: int
+
+            actionPerformed()
+            updateAddParty()
+            receiveControlDeskEvent()
+        }
+
+        class EndGamePrompt {
+            win: JFrame
+            yesButton: JButton
+            noButton: JButton
+            result: int
+            selectedNick: String
+            selectedMember: String
+            
+            actionPerformed()
+            getResult()
+            distroy()
+        }
+
+        class EndGameReport {
+            win: JFrame
+            printButton: JButton
+            finished: JButton
+            memberList: JList
+            myVector: Vector
+            retVal: Vector
+            result: int
+            selectedMember: String
+
+            actionPerformed()
+            valueChanged()
+            getResult()
+            main()
+            destroy()
+        }
+
+        class LaneStatusView {
+            jp: JPanel
+            curBowler: JLabel
+            foul: JLabel
+            pinsDown: JLabel
+            viewLane: JButton
+            viewPinSetter: JButton
+            maintenance: JButton
+            psv: PinSetterView
+            lv: LaneView
+            lane: Lane
+            laneNum: int
+            laneShowing: boolean
+            psShowing: boolean
+
+            showLane()
+            actionPerformed()
+            receiveLaneEvent()
+            receivePinSetterEvent()
+        }
+
+        class LaneView {
+            roll: int
+            initDone: boolean
+            frame: JFrame
+            cpanel: Container
+            bowlers: Vector
+            cur: int
+            bowlIt: Iterator
+            balls: JPanel[][]
+            ballLabel: JPanel[][]
+            scores: JPanel[][]
+            scoreLabel: JPanel[][]
+            ballGrid: JPanel[][]
+            pins: JPanel[][]
+            maintenance: JButton
+            lane: Lane
+
+            show()
+            hide()
+            makeFrame()
+            receiveLaneEvent()
+            actionPerformed()
+        }
+
+        class NewPatronView {
+            maxSize: int
+            win: JFrame
+            abort: JButton
+            finished: JButton
+            nickLabel: JLabel
+            fullLabel: JLabel
+            emailLabel: JLabel
+            nickField: JTextField
+            fullField: JTextField
+            emailField: JTextField
+            nick: String
+            full: String
+            email: String
+            done: boolean
+            selectedNick: String
+            selectedMember: String
+            addParty: AddPartyView
+            
+            actionPerformed()
+            done()
+            getNick()
+            getFull()
+            getEmail()
+        }
+
+        class PinSetterView {
+            pinVect: Vector
+            firstRoll: JPanel
+            secondRoll: JPanel
+            frame: JFrame
+            
+            receivePinsetterEvent()
+            show()
+            hide()
+            main()
+        }
+    }
+
+    package Utilities <<Folder>> #DDDDDD {
+        class Queue {
+            v: Vector
+
+            next()
+            add()
+            hasMoreElements()
+            asVector()
+        }
+
+        class Alley {
+            controlDesk: ControlDesk
+
+            getControlDesk()
+        }
+
+        class drive {
+            numLanes: int
+            maxPatronsPerParty: int
+            a: Alley
+            controlDesk: ControlDesk
+            cdv: controlDeskView
+        }
+    }
+
+    class LaneObserver << interface >> {
+        receiveLaneEvent()
+    }
+
+    class ControlDeskObserver << interface >> {
+        receiveControlDeskEvent()
+    }
+
+    class PinsetterObserver << interface >> {
+        receivePinsetterEvent()
+    }
+
+    ' Relations
+    Party "1 " o-- "1..~* " Bowler:"member"
+    Pinsetter "1 " -- "~* " Lane:"assigned"
+    Party "1" -- "1" Lane:"assigned"
+    Lane "1" *-- "~*" LaneEvent:"associated"
+    ControlDesk "1" *-- "~*" Lane:lanes of
+    ControlDesk "1" *-- "~*" Party:party of
+    Score "~*" *-- "1" ScoreReport:columns of
+    ScoreReport "1" --* "1" Bowler:report of
+    Bowler "~*" --|> "1" BowlerFile:stores
+    Score "~*" --|> "1" ScoreHistoryFile:stores
+    Pinsetter "1" *-- "~*" PinsetterEvent:associated
+    ControlDesk "1" *-- "~*" ControlDeskEvent:associated
+
+
+    ' Relations 2
+    Alley "1..~*" --* "1" drive:created by 
+    ControlDeskView "1" --* "1" drive:created by
+    LaneStatusView "1" --|> "1" LaneObserver:implements
+    LaneView "1" --|> "1" LaneObserver:implements
+    ControlDeskView "1" --|> "1" ControlDeskObserver:implements
+    PinSetterView "1" --|> "1" PinsetterObserver:implements
+    LaneStatusView "1" --|> "1" PinsetterObserver:implements
+
+    ' Relations 3
+    LaneView "1" --* "1" Lane:associated
+    LaneStatusView "1" --* "1" Lane:associated
+    AddPartyView "~*" --* "1" ControlDeskView:launched by
+    NewPatronView "1" --* "1" AddPartyView:launched by
+    PinSetterView "1" -- "1..~*" Lane:associated
+
+    ' For alignment
+    LaneObserver -[hidden]-- drive
+    LaneView -[hidden]-- drive
+    AddPartyView -[hidden]-- PinSetterView
+@enduml
