@@ -738,7 +738,8 @@ public class Lane extends Thread implements PinsetterObserver {	// Implements Pi
 		int strikeballs;// Utils
 		int halfI = i/2;
 		//Spare:
-		doSpareCycle(i, curScore[i-1], curScore[i], curScore[i + 1], current);
+		if(i % 2 == 1)
+			doSpareCycle(i, curScore[i-1], curScore[i], curScore[i + 1], current);
 //			if(isSpare(i, curScore[i - 1], curScore[i], current)){
 		//This ball was a the second of a spare.
 		//Also, we're not on the current ball.
