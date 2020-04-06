@@ -26,14 +26,16 @@
  */
 
 public class Alley {
-	public ControlDesk controldesk;
+	public ControlDesk controldesk; // ControlDesk object - 
 
-    public Alley( int numLanes ) {
-        controldesk = new ControlDesk( numLanes );
+	// Constructor with the numLanes
+    public Alley( int numLanes ) { 
+        controldesk = new ControlDesk( numLanes ); // Initalizes the ControlDesk object with the numLanes variable.
     }
 
+	// Getter for the controlDesk Object
 	public ControlDesk getControlDesk() {
-		return controldesk;
+		return controldesk; // Why this? Unless the controldesk instance is inherited we can safely turn that into private 
 	}
 	
 }

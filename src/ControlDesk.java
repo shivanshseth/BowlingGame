@@ -43,7 +43,7 @@
 import java.util.*;
 import java.io.*;
 
-class ControlDesk extends Thread {
+class ControlDesk extends Thread {// Extends threads - wil provide its own thread.run method and used for multithreading
 
 	/** The collection of Lanes */
 	private HashSet lanes;
@@ -66,16 +66,16 @@ class ControlDesk extends Thread {
 
 	public ControlDesk(int numLanes) {
 		this.numLanes = numLanes;
-		lanes = new HashSet(numLanes);
-		partyQueue = new Queue();
+		lanes = new HashSet(numLanes); // Set of the lanes? 
+		partyQueue = new Queue(); // Queue of the people playing
 
-		subscribers = new Vector();
+		subscribers = new Vector(); // Find out
 
 		for (int i = 0; i < numLanes; i++) {
-			lanes.add(new Lane());
+			lanes.add(new Lane()); // Adds the lanes to the HashSet
 		}
 		
-		this.start();
+		this.start(); // Probably the thread.start implementation
 
 	}
 	
@@ -83,10 +83,10 @@ class ControlDesk extends Thread {
 	 * Main loop for ControlDesk's thread
 	 * 
 	 */
-	public void run() {
-		while (true) {
+	public void run() { // Custom run function for the main thread
+		while (true) { // Infinite loop 
 			
-			assignLane();
+			assignLane(); // It keeps assigning lanes to parties if lanes are available 
 			
 			try {
 				sleep(250);
@@ -110,7 +110,7 @@ class ControlDesk extends Thread {
 		try {
 			// only one patron / nick.... no dupes, no checks
 
-			patron = BowlerFile.getBowlerInfo(nickName);
+			patron = BowlerFile.getBowlerInfo(nickName); // Function from the BowerFile class to find the Bowler
 
 		} catch (FileNotFoundException e) {
 			System.err.println("Error..." + e);
@@ -119,6 +119,8 @@ class ControlDesk extends Thread {
 		}
 
 		return patron;
+		// Returns the Bowler object if details are found ? 
+		// Else returns a nulll object 
 	}
 
     /**
@@ -127,17 +129,17 @@ class ControlDesk extends Thread {
      */
 
 	public void assignLane() {
-		Iterator it = lanes.iterator();
+		Iterator it = lanes.iterator(); // Iterator that goes through the lanes HashSet in any random order 
 
 		while (it.hasNext() && partyQueue.hasMoreElements()) {
 			Lane curLane = (Lane) it.next();
 
 			if (curLane.isPartyAssigned() == false) {
 				System.out.println("ok... assigning this party");
-				curLane.assignParty(((Party) partyQueue.next()));
+				curLane.assignParty(((Party) partyQueue.next())); // Function from the Lane class to assign Party
 			}
 		}
-		publish(new ControlDeskEvent(getPartyQueue()));
+		publish(new ControlDeskEvent(getPartyQueue())); // Send the ControlDeskEvent to all the subscribers
 	}
 
     /**
@@ -156,14 +158,16 @@ class ControlDesk extends Thread {
 
 	public void addPartyQueue(Vector partyNicks) {
 		Vector partyBowlers = new Vector();
+		// Iterate through the list of the party nicknames and then create a new Bowler from the nickName 
+		// Then add them to a partyBowlers list
 		for (int i = 0; i < partyNicks.size(); i++) {
-			Bowler newBowler = registerPatron(((String) partyNicks.get(i)));
-			partyBowlers.add(newBowler);
+			Bowler newBowler = registerPatron(((String) partyNicks.get(i))); // Calls the register patron function that was declared above
+			partyBowlers.add(newBowler); // newBowler should not be null... Hopefully, I guess, the function will add new if doesn't exist.
 		}
-		Party newParty = new Party(partyBowlers);
-		partyQueue.add(newParty);
-		publish(new ControlDeskEvent(getPartyQueue()));
-	}
+		Party newParty = new Party(partyBowlers); // Some Party object is created with the required details
+		partyQueue.add(newParty); // Adds the party to the current party queue
+		publish(new ControlDeskEvent(getPartyQueue())); // Sends the ControlDeskEvent to all the subscribers
+ 	}
 
     /**
      * Returns a Vector of party names to be displayed in the GUI representation of the wait queue.
@@ -173,14 +177,16 @@ class ControlDesk extends Thread {
      */
 
 	public Vector getPartyQueue() {
-		Vector displayPartyQueue = new Vector();
+		Vector displayPartyQueue = new Vector(); // New vector to be returned
+		// Loops through the partyQueue (Queue) by converting it to a Vector 
 		for ( int i=0; i < ( (Vector)partyQueue.asVector()).size(); i++ ) {
 			String nextParty =
-				((Bowler) ((Vector) ((Party) partyQueue.asVector().get( i ) ).getMembers())
-					.get(0))
-					.getNickName() + "'s Party";
-			displayPartyQueue.addElement(nextParty);
+				((Bowler) ((Vector) ((Party) partyQueue.asVector().get( i ) ).getMembers())  // List of all the members of the group
+					.get(0))  // Gets the first bowler
+					.getNickName() + "'s Party"; // So the string <FirstBowlerNickname>'s Party
+			displayPartyQueue.addElement(nextParty); // Adds that to the displayPartyQueue
 		}
+		// Returns a list of strings as created above
 		return displayPartyQueue;
 	}
 
@@ -191,6 +197,7 @@ class ControlDesk extends Thread {
      *
      */
 
+	// Okay to have this because numLanes is a private variable
 	public int getNumLanes() {
 		return numLanes;
 	}
@@ -202,8 +209,9 @@ class ControlDesk extends Thread {
      *
      */
 
+	//  Subscription? Observers?
 	public void subscribe(ControlDeskObserver adding) {
-		subscribers.add(adding);
+		subscribers.add(adding); // Pushes it into the subscribers list
 	}
 
     /**
@@ -214,12 +222,12 @@ class ControlDesk extends Thread {
      */
 
 	public void publish(ControlDeskEvent event) {
-		Iterator eventIterator = subscribers.iterator();
+		Iterator eventIterator = subscribers.iterator(); // Iterator of the subscribers vector
 		while (eventIterator.hasNext()) {
 			(
 				(ControlDeskObserver) eventIterator
 					.next())
-					.receiveControlDeskEvent(
+					.receiveControlDeskEvent( // Find out? // Sends the ControlDesKEvent to the receiver at the other end
 				event);
 		}
 	}
@@ -231,6 +239,7 @@ class ControlDesk extends Thread {
      *
      */
 
+	// Don't know if the lanes object is private or public?
 	public HashSet getLanes() {
 		return lanes;
 	}

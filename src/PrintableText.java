@@ -8,7 +8,7 @@ import java.awt.geom.*;
 import java.awt.font.*;
 import java.text.*;
 
-public class PrintableText implements Printable {
+public class PrintableText implements Printable { // Implements Printable --> Some interface
 	String text;
 	int POINTS_PER_INCH;
 
