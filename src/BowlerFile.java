@@ -38,7 +38,6 @@ class BowlerFile {
 
 	public static Bowler getBowlerInfo(String nickName)
 		throws IOException, FileNotFoundException {
-
 		BufferedReader in = new BufferedReader(new FileReader(BOWLER_DAT));
 		String data;
 		while ((data = in.readLine()) != null) {
@@ -46,15 +45,16 @@ class BowlerFile {
 			String[] bowler = data.split("\t");
 			if (nickName.equals(bowler[0])) {
 				System.out.println(
-					"Nick: "
-						+ bowler[0]
-						+ " Full: "
-						+ bowler[1]
-						+ " email: "
-						+ bowler[2]);
+						"Nick: "
+								+ bowler[0]
+								+ " Full: "
+								+ bowler[1]
+								+ " email: "
+								+ bowler[2]);
 				return (new Bowler(bowler[0], bowler[1], bowler[2]));
+				}
 			}
-		}
+
 		System.out.println("Nick not found...");
 		return null;
 	}
@@ -82,6 +82,20 @@ class BowlerFile {
 		out.close();
 	}
 
+	public static Bowler registerPatron(String nickName) {
+		Bowler patron = null;
+
+		try {
+			// only one patron / nick.... no dupes, no checks
+
+			patron = getBowlerInfo(nickName);
+
+		} catch (Exception e) {
+			System.err.println("Error..." + e);
+		}
+
+		return patron;
+	}
     /**
      * Retrieves a list of nicknames in the bowler database
      *
