@@ -131,6 +131,8 @@
  *
  */
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Lane extends Thread implements PinsetterObserver {
@@ -179,6 +181,18 @@ public class Lane extends Thread implements PinsetterObserver {
 		setter.subscribe( this );
 
 		this.start();
+	}
+	public void loadLane(LaneEvent le) {
+//		this.pauseGame();
+//		party = le.getParty();
+//		bowlIndex = le.getIndex();
+//		currentThrower = le.getBowler();
+//		cumulScores = le.getCumulScore();
+//		scores = le.getScore();
+//		frameNumber = le.getFrameNum();
+//		ball = le.getBall();
+		gameIsHalted = true;
+		partyAssigned = true;
 	}
 
 	/** run()
@@ -622,4 +636,12 @@ public class Lane extends Thread implements PinsetterObserver {
 		publish(lanePublish());
 	}
 
+	public void saveGame(){
+		LocalDateTime myDateObj = LocalDateTime.now();
+		DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+		String formattedDate = myDateObj.format(myFormatObj);
+		Bowler b = (Bowler) party.getMembers().get(0);
+		String saveTitle = b.getNick() + "'s party" + formattedDate;
+		SaveFile.addSaveState(lanePublish());
+	}
 }

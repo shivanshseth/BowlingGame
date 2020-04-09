@@ -26,7 +26,7 @@ public class LaneView implements LaneObserver, ActionListener {
 	JPanel[][] ballGrid;
 	JPanel[] pins;
 
-	JButton maintenance;
+	JButton maintenance, loadGame, saveGame;
 	Lane lane;
 
 	public LaneView(Lane lane, int laneNum) {
@@ -136,28 +136,7 @@ public class LaneView implements LaneObserver, ActionListener {
 			if (le.getFrameNum() == 1
 				&& le.getBall() == 0
 				&& le.getIndex() == 0) {
-				System.out.println("Making the frame.");
-				cpanel.removeAll();
-				cpanel.add(makeFrame(le.getParty()), "Center");
-
-				// Button Panel
-				JPanel buttonPanel = new JPanel();
-				buttonPanel.setLayout(new FlowLayout());
-
-				Insets buttonMargin = new Insets(4, 4, 4, 4);
-
-				maintenance = new JButton("Maintenance Call");
-				JPanel maintenancePanel = new JPanel();
-				maintenancePanel.setLayout(new FlowLayout());
-				maintenance.addActionListener(this);
-				maintenancePanel.add(maintenance);
-
-				buttonPanel.add(maintenancePanel);
-
-				cpanel.add(buttonPanel, "South");
-
-				frame.pack();
-
+				makeFrame(le);
 			}
 
 			int[][] lescores = le.getCumulScore();
@@ -165,6 +144,7 @@ public class LaneView implements LaneObserver, ActionListener {
 				for (int i = 0; i <= le.getFrameNum() - 1; i++) {
 					if (lescores[k][i] != 0)
 						scoreLabel[k][i].setText(
+
 							(new Integer(lescores[k][i])).toString());
 				}
 				for (int i = 0; i < 21; i++) {
@@ -200,9 +180,56 @@ public class LaneView implements LaneObserver, ActionListener {
 		}
 	}
 
+	private void makeFrame(LaneEvent le) {
+		System.out.println("Making the frame.");
+		cpanel.removeAll();
+		cpanel.add(makeFrame(le.getParty()), "Center");
+
+		// Button Panel
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout());
+
+		Insets buttonMargin = new Insets(4, 4, 4, 4);
+
+		maintenance = new JButton("Maintenance Call");
+		JPanel maintenancePanel = new JPanel();
+		maintenancePanel.setLayout(new FlowLayout());
+		maintenance.addActionListener(this);
+		maintenancePanel.add(maintenance);
+
+		loadGame = new JButton("Load Game");
+		JPanel loadGamePanel = new JPanel();
+		loadGamePanel.setLayout(new FlowLayout());
+		loadGame.addActionListener(this);
+		loadGamePanel.add(loadGame);
+
+		saveGame = new JButton("Save Game");
+		JPanel saveGamePanel = new JPanel();
+		saveGamePanel.setLayout(new FlowLayout());
+		saveGame.addActionListener(this);
+		saveGamePanel.add(saveGame);
+
+		buttonPanel.add(maintenancePanel);
+		buttonPanel.add(saveGamePanel);
+		buttonPanel.add(loadGamePanel);
+
+		cpanel.add(buttonPanel, "South");
+
+		frame.pack();
+	}
+
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(maintenance)) {
 			lane.pauseGame();
+		}
+
+		else if (e.getSource().equals(saveGame)){
+			lane.saveGame();
+		}
+
+		else if (e.getSource().equals(loadGame)){
+			System.out.println("Loading...");
+			LoadSavedView ls = new LoadSavedView(lane, this);
 		}
 	}
 

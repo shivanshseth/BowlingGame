@@ -24,8 +24,11 @@
  */
 
 import java.util.HashMap;
+import java.io.Serializable;
 
-public class LaneEvent {
+
+public class LaneEvent implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private Party p;
 	int frame;

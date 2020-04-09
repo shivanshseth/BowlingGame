@@ -104,31 +104,37 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 	public void actionPerformed( ActionEvent e ) {
 		if ( lane.isPartyAssigned() ) { 
 			if (e.getSource().equals(viewPinSetter)) {
-				if ( psShowing == false ) {
-					psv.show();
-					psShowing=true;
-				} else if ( psShowing == true ) {
-					psv.hide();
-					psShowing=false;
-				}
+				actionViewPinsetter();
 			}
-		}
-		if (e.getSource().equals(viewLane)) {
-			if ( lane.isPartyAssigned() ) { 
-				if ( laneShowing == false ) {
-					lv.show();
-					laneShowing=true;
-				} else if ( laneShowing == true ) {
-					lv.hide();
-					laneShowing=false;
-				}
+			if (e.getSource().equals(viewLane)) {
+				actionViewLane();
 			}
-		}
-		if (e.getSource().equals(maintenance)) {
-			if ( lane.isPartyAssigned() ) {
+			if (e.getSource().equals(maintenance)) {
 				lane.unPauseGame();
 				maintenance.setBackground( Color.GREEN );
 			}
+		}
+
+
+	}
+
+	private void actionViewLane() {
+		if ( laneShowing == false ) {
+			lv.show();
+			laneShowing=true;
+		} else if ( laneShowing == true ) {
+			lv.hide();
+			laneShowing=false;
+		}
+	}
+
+	private void actionViewPinsetter() {
+		if ( psShowing == false ) {
+			psv.show();
+			psShowing=true;
+		} else if ( psShowing == true ) {
+			psv.hide();
+			psShowing=false;
 		}
 	}
 

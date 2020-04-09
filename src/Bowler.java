@@ -17,14 +17,17 @@
  *
  */
 
+import java.io.Serializable;
+
 /**
  *  Class that holds all bowler info
  *
  */
 
-public class Bowler {
+public class Bowler implements Serializable {
+	private static final long serialVersionUID = 1102L;
 
-    private String fullName;
+	private String fullName;
     private String nickName;
     private String email;
 
