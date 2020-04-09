@@ -11,8 +11,8 @@ public class drive {
 		Alley a = new Alley(numLanes); // Creates an instance of the Alley class with the parameter numLanes
 		ControlDesk controlDesk = a.getControlDesk(); // Control Desk - ? 
 
-		ControlDeskView cdv = new ControlDeskView(controlDesk, maxPatronsPerParty); // view? Something that is displayed.
-		controlDesk.subscribe(cdv); // Subscribe?
+		ControlDeskView cdv = new ControlDeskView( controlDesk, maxPatronsPerParty);
+		controlDesk.addControlView( cdv );
 
 	}
 }

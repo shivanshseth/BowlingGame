@@ -82,6 +82,20 @@ class BowlerFile {
 		out.close(); // Closes the files.
 	}
 
+	public static Bowler registerPatron(String nickName) {
+		Bowler patron = null;
+
+		try {
+			// only one patron / nick.... no dupes, no checks
+
+			patron = getBowlerInfo(nickName);
+
+		} catch (Exception e) {
+			System.err.println("Error..." + e);
+		}
+
+		return patron;
+	}
     /**
      * Retrieves a list of nicknames in the bowler database
      *
