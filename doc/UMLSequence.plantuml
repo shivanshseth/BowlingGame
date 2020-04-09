@@ -1,0 +1,139 @@
+@startuml test
+
+
+skinparam padding 2
+
+autonumber
+actor user 
+database BOWLERS_DAT
+database SCOREHISTORY_DAT
+
+user -> drive: start
+drive -> Alley: init
+Alley -> ControlDesk : get
+drive -> ControlDeskView: init
+ControlDesk -> ControlDeskView: subscribe
+user -> ControlDeskView: add party
+ControlDeskView -> AddPartyView: init
+user -> AddPartyView: adds Party member
+autonumber stop
+opt add new patrons
+    user -> NewPatronView: add patron details
+    NewPatronView -> BowlerFile: add Bowler
+    BowlerFile -> BOWLERS_DAT: save details on DB
+    
+    alt successful case
+        BOWLERS_DAT -> BowlerFile: return details
+        BowlerFile -> NewPatronView: return new patron
+        NewPatronView -> user: ok
+
+    else IOException
+        BOWLERS_DAT -> BowlerFile: throw error
+        BowlerFile -> NewPatronView: return null
+        NewPatronView -> user: display error 
+    end
+end
+note right
+    The user is able to add
+    new patrons to the database
+end note
+autonumber resume
+
+AddPartyView -> BowlerFile: verify member
+BowlerFile -> BOWLERS_DAT: check if present
+
+alt successful case
+
+    BOWLERS_DAT -> BowlerFile: return member details    
+    BowlerFile -> AddPartyView: return member
+
+
+    loop until no party in partyQueue
+        AddPartyView -> ControlDeskView: return party to partyQueue
+        ControlDeskView -> Lane: assigns Lane to party from partyQueue
+        Lane -> Pinsetter: setup Pins
+        Lane -> LaneView: subscribe
+        Pinsetter -> PinsetterView: subscribe
+        loop until party plays another game 
+            loop 21 times
+                Pinsetter -> Lane: send pins down
+                Pinsetter -> PinsetterView: publish update
+                Pinsetter -> LaneStatusView: publish update
+                PinsetterView -> user: display pinsetter state
+                LaneStatusView -> user: display updates
+                Lane -> Lane: calculate score
+                Lane -> LaneView: publish update
+                Lane -> LaneStatusView: publish updates
+                LaneView -> user: display new scores
+                LaneStatusView -> user: display updates
+                autonumber stop
+                opt user can pause the lane for maintenance
+                    user -> LaneView: call for maintenance
+                    LaneView -> Lane: pause Lane
+                end
+            end
+            autonumber resume
+            Lane -> EndGamePrompt: init
+            EndGamePrompt -> user: show End Prompt
+        end
+        note right
+            The user will have the choice to restart 
+            a new round or end the game in the EndGamePrompt
+        end note
+
+        user -> EndGamePrompt: end game
+        EndGamePrompt -> EndGameReport: generate EndGameReport
+        loop for each member in the party
+            EndGamePrompt -> ScoreReport: create a scoreReport
+            ScoreReport -> ScoreHistoryFile: request old scores for player
+            ScoreHistoryFile -> SCOREHISTORY_DAT: read old scores from file
+            alt successful case
+                SCOREHISTORY_DAT -> ScoreHistoryFile: return scores
+                ScoreHistoryFiles -> ScoreReport: return scores
+                ScoreReport -> user: email scores
+                note right
+                    The system implements a simple SMTP
+                    protocol to send the email
+                end note
+                
+                autonumber stop
+                opt user can print report
+                    user -> EndGameReport: print Report
+                    EndGameReport -> ScoreReport: return selected members
+                    ScoreReport -> PrintableJob: Create a printerJob
+                    PrintableJob -> PrintableText: Create a printable text of the report
+                    PrintableText -> PrintableJob: return printable text
+                    PrintableJob -> user: print content
+                end
+                note over PrintableText
+                    It implements Printable
+                    and sends the request to
+                    the user's printers
+                end note   
+
+            autonumber 27
+            else IOException
+                SCOREHISTORY_DAT -> ScoreHistoryFile: throw error
+                ScoreHistoryFile -> ScoreReport: return null
+                ScoreReport -> user: display error
+            end
+
+            autonumber 30
+            Lane -> ControlDesk: lane cleared 
+        end
+    end
+    note over PrintableText
+        The party Queue is emptied 
+        when the ControlDesk has assigned all
+        the parties to a Lane
+    end note
+
+
+autonumber 11
+else IOException
+    BOWLERS_DAT -> BowlerFile: throw error
+    BowlerFile -> AddPartyView: return null
+    AddPartyView -> user: display error
+end
+    
+@enduml 
