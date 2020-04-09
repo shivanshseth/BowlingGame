@@ -1,6 +1,6 @@
 /**
  * 
- * SMTP implementation based on code by Réal Gagnon mailto:real@rgagnon.com
+ * SMTP implementation based on code by Rï¿½al Gagnon mailto:real@rgagnon.com
  * 
  */
 
@@ -21,10 +21,10 @@ public class ScoreReport {
 		String full = bowler.getFullName();
 		Vector v = null;
 		try{
-			v = ScoreHistoryFile.getScores(nick);
+			v = ScoreHistoryFile.getScores(nick); // Gets the scores of the person
 		} catch (Exception e){System.err.println("Error: " + e);}
 		
-		Iterator scoreIt = v.iterator();
+		Iterator scoreIt = v.iterator(); // Creates an iterator for v
 		
 		content = "";
 		content += "--Lucky Strike Bowling Alley Score Report--\n";
@@ -32,7 +32,7 @@ public class ScoreReport {
 		content += "Report for " + full + ", aka \"" + nick + "\":\n";
 		content += "\n";
 		content += "Final scores for this session: ";
-		content += scores[0];
+		content += scores[0];  // Scores has the scores of the current session
 		for (int i = 1; i < games; i++){
 			content += ", " + scores[i];
 		}
@@ -40,7 +40,7 @@ public class ScoreReport {
 		content += "\n";
 		content += "\n";
 		content += "Previous scores by date: \n";
-		while (scoreIt.hasNext()){
+		while (scoreIt.hasNext()){ // Here we use the iterator to get to the next old score
 			Score score = (Score) scoreIt.next();
 			content += "  " + score.getDate() + " - " +  score.getScore();
 			content += "\n";
@@ -83,11 +83,11 @@ public class ScoreReport {
 	}
 
 	public void sendPrintout() {
-		PrinterJob job = PrinterJob.getPrinterJob();
+		PrinterJob job = PrinterJob.getPrinterJob(); // Some PrinterJob stuff --> Maybe that has to be implemented
 
-		PrintableText printobj = new PrintableText(content);
+		PrintableText printobj = new PrintableText(content); // Creates a printabletext of the content
 
-		job.setPrintable(printobj);
+		job.setPrintable(printobj); // sends the job to print
 
 		if (job.printDialog()) {
 			try {

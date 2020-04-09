@@ -5,14 +5,14 @@ public class drive {
 
 	public static void main(String[] args) {
 
-		int numLanes = 3;
-		int maxPatronsPerParty=5;
+		int numLanes = 3; // Seems to initialize the number of lanes which is passed to the Alley Object
+		int maxPatronsPerParty = 5; // Seems to initialize the maximum number of patrons per game
 
-		Alley a = new Alley( numLanes );
-		ControlDesk controlDesk = a.getControlDesk();
+		Alley a = new Alley(numLanes); // Creates an instance of the Alley class with the parameter numLanes
+		ControlDesk controlDesk = a.getControlDesk(); // Control Desk - ? 
 
-		ControlDeskView cdv = new ControlDeskView( controlDesk, maxPatronsPerParty);
-		controlDesk.subscribe( cdv );
+		ControlDeskView cdv = new ControlDeskView(controlDesk, maxPatronsPerParty); // view? Something that is displayed.
+		controlDesk.subscribe(cdv); // Subscribe?
 
 	}
 }

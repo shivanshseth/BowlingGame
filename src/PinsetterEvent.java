@@ -14,7 +14,7 @@
 
 public class PinsetterEvent {
 
-	private boolean[] pinsStillStanding;
+	private boolean[] pinsStillStanding; // Boolean list of the pins still standing
 	private boolean foulCommited;
 	private int throwNumber;
 	private int pinsDownThisThrow;

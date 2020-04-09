@@ -17,8 +17,8 @@ import java.text.*;
 
 public class EndGamePrompt implements ActionListener {
 
-	private JFrame win;
-	private JButton yesButton, noButton;
+	private JFrame win; // Create a JF window
+	private JButton yesButton, noButton; // Creates buttons
 
 	private int result;
 
@@ -28,12 +28,12 @@ public class EndGamePrompt implements ActionListener {
 
 		result =0;
 		
-		win = new JFrame("Another Game for " + partyName + "?" );
+		win = new JFrame("Another Game for " + partyName + "?" ); // Request for another game
 		win.getContentPane().setLayout(new BorderLayout());
 		((JPanel) win.getContentPane()).setOpaque(false);
 
-		JPanel colPanel = new JPanel();
-		colPanel.setLayout(new GridLayout( 2, 1 ));
+		JPanel colPanel = new JPanel(); // Create a panel
+		colPanel.setLayout(new GridLayout( 2, 1 )); // Sets out a grid layout with 2 rows and 1 panel (I presume)
 
 		// Label Panel
 		JPanel labelPanel = new JPanel();

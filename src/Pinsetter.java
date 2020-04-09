@@ -75,8 +75,8 @@ import java.lang.Boolean;
 
 public class Pinsetter {
 
-	private Random rnd;
-	private Vector subscribers;
+	private Random rnd; // Generate a random object
+	private Vector subscribers; // List of the subscribers to send the event to.
 
 	private boolean[] pins; 
 			/* 0-9 of state of pine, true for standing, 
@@ -101,7 +101,7 @@ public class Pinsetter {
 	private void sendEvent(int jdpins) {	// send events when our state is changd
 		for (int i=0; i < subscribers.size(); i++) {
 			((PinsetterObserver)subscribers.get(i)).receivePinsetterEvent(
-				new PinsetterEvent(pins, foul, throwNumber, jdpins));
+				new PinsetterEvent(pins, foul, throwNumber, jdpins)); // The final pins, foul, the throw number and the score of the pin
 		}
 	}
 
@@ -118,7 +118,7 @@ public class Pinsetter {
 		rnd = new Random();
 		subscribers = new Vector();
 		foul = false;
-		reset();
+		reset(); // Resets the Pinsetter's state
 	}
 
 	/** ballThrown()
@@ -129,20 +129,20 @@ public class Pinsetter {
 	 * @post pins may have been knocked down and the thrownumber has been incremented
 	 */
 	public void ballThrown() {	// simulated event of ball hits sensor
-		int count = 0;
+		int count = 0; // Initializing count
 		foul = false;
-		double skill = rnd.nextDouble();
+		double skill = rnd.nextDouble(); // skill? Another random variable
 		for (int i=0; i <= 9; i++) {
-			if (pins[i]) {
+			if (pins[i]) { // If pins[i] is still not knocked down
 				double pinluck = rnd.nextDouble();
 				if (pinluck <= .04){ 
-					foul = true;
+					foul = true; // Puts foul here... But how is the foul per pin. And if it is a foul shouldn't the rest of the pins not be calculated?
 				}
-				if ( ((skill + pinluck)/2.0 * 1.2) > .5 ){
-					pins[i] = false;
+				if ( ((skill + pinluck)/2.0 * 1.2) > .5 ){ // Improve the calc here
+					pins[i] = false;  // Some random math to put the pin down
 				} 
 				if (!pins[i]) {		// this pin just knocked down
-					count++;
+					count++; // Increaes the count
 				}
 			}
 		}
@@ -151,9 +151,9 @@ public class Pinsetter {
 			Thread.sleep(500);				// pinsetter is where delay will be in a real game
 		} catch (Exception e) {}
 
-		sendEvent(count);
+		sendEvent(count); // Sends the count of the throw
 
-		throwNumber++;
+		throwNumber++; // Increases the throw number
 	}
 
 	/** reset()
@@ -172,7 +172,7 @@ public class Pinsetter {
 			Thread.sleep(1000);
 		} catch (Exception e) {}
 		
-		sendEvent(-1);
+		sendEvent(-1); // Sends the score of -1 --> Probably means to reset the counts
 	}
 
 	/** resetPins()
@@ -184,7 +184,7 @@ public class Pinsetter {
 	 */
 	public void resetPins() {
 		for (int i=0; i <= 9; i++) {
-			pins[i] = true;
+			pins[i] = true; // pins[i] == true --> Pins are standing
 		}
 	}		
 
@@ -197,7 +197,7 @@ public class Pinsetter {
 	 */
 	public void subscribe(PinsetterObserver subscriber) {
 		subscribers.add(subscriber);
+		// Add Objects to send the events to
 	}
-
 };
 

@@ -21,8 +21,15 @@ import javax.swing.event.*;
 
 import java.util.*;
 
+// An interface is an abstract "class" that is used to group related methods with "empty" bodies
+
+// To access the interface methods, the interface must be "implemented" (kinda like inherited) by 
+// another class with the implements keyword (instead of extends). The body of the interface method
+//  is provided by the "implement" class:
+
 public class ControlDeskView implements ActionListener, ControlDeskObserver {
 
+	// Class for the Control Desk View
 	private JButton addParty, finished, assign;
 	private JFrame win;
 	private JList partyList;
@@ -43,9 +50,9 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		this.maxMembers = maxMembers;
 		int numLanes = controlDesk.getNumLanes();
 
-		win = new JFrame("Control Desk");
-		win.getContentPane().setLayout(new BorderLayout());
-		((JPanel) win.getContentPane()).setOpaque(false);
+		win = new JFrame("Control Desk"); // Create a new JFrame 
+		win.getContentPane().setLayout(new BorderLayout()); // Sets a borederlayout
+		((JPanel) win.getContentPane()).setOpaque(false); 
 
 		JPanel colPanel = new JPanel();
 		colPanel.setLayout(new BorderLayout());
@@ -81,16 +88,16 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		laneStatusPanel.setLayout(new GridLayout(numLanes, 1));
 		laneStatusPanel.setBorder(new TitledBorder("Lane Status"));
 
-		HashSet lanes=controlDesk.getLanes();
-		Iterator it = lanes.iterator();
+		HashSet lanes=controlDesk.getLanes(); // Gets the lanes from the controldesk getter
+		Iterator it = lanes.iterator(); // Creates an iterator for the lanes
 		int laneCount=0;
-		while (it.hasNext()) {
+		while (it.hasNext()) { // Iterate through the lanes HashSet
 			Lane curLane = (Lane) it.next();
-			LaneStatusView laneStat = new LaneStatusView(curLane,(laneCount+1));
-			curLane.subscribe(laneStat);
-			((Pinsetter)curLane.getPinsetter()).subscribe(laneStat);
-			JPanel lanePanel = laneStat.showLane();
-			lanePanel.setBorder(new TitledBorder("Lane" + ++laneCount ));
+			LaneStatusView laneStat = new LaneStatusView(curLane,(laneCount+1)); // LaneStatusView class
+			curLane.subscribe(laneStat); // Subscribes the lanestat to the current lane
+			((Pinsetter)curLane.getPinsetter()).subscribe(laneStat); // Gets the pinsetter object to subscribe to the lane status object
+			JPanel lanePanel = laneStat.showLane(); // Shows ths lane status
+			lanePanel.setBorder(new TitledBorder("Lane" + ++laneCount )); 
 			laneStatusPanel.add(lanePanel);
 		}
 
@@ -121,7 +128,7 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		win.pack();
 
 		/* Close program when this window closes */
-		win.addWindowListener(new WindowAdapter() {
+		win.addWindowListener(new WindowAdapter() { 
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
 			}
@@ -132,7 +139,7 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		win.setLocation(
 			((screenSize.width) / 2) - ((win.getSize().width) / 2),
 			((screenSize.height) / 2) - ((win.getSize().height) / 2));
-		win.show();
+		win.show(); // show() is depracated
 
 	}
 
@@ -143,15 +150,15 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 	 *
 	 */
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e) { //ActionEvent ?  triggered
 		if (e.getSource().equals(addParty)) {
-			AddPartyView addPartyWin = new AddPartyView(this, maxMembers);
+			AddPartyView addPartyWin = new AddPartyView(this, maxMembers); // The view for the AddParty class
 		}
 		if (e.getSource().equals(assign)) {
 			controlDesk.assignLane();
 		}
 		if (e.getSource().equals(finished)) {
-			win.hide();
+			win.hide(); // hide() is depracated
 			System.exit(0);
 		}
 	}
