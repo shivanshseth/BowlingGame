@@ -26,7 +26,7 @@ public class LaneView implements LaneObserver, ActionListener {
 	JPanel[][] ballGrid;
 	JPanel[] pins;
 
-	JButton maintenance, loadGame, saveGame;
+	JButton maintenance, resume, saveGame;
 	Lane lane;
 	int callNo= 0;
 
@@ -201,13 +201,13 @@ public class LaneView implements LaneObserver, ActionListener {
 		maintenance.addActionListener(this);
 		maintenancePanel.add(maintenance);
 
-//		loadGame = new JButton("Load Game");
-//		JPanel loadGamePanel = new JPanel();
-//		loadGamePanel.setLayout(new FlowLayout());
-//		loadGame.addActionListener(this);
-//		loadGamePanel.add(loadGame);
+		resume = new JButton("Resume");
+		JPanel loadGamePanel = new JPanel();
+		loadGamePanel.setLayout(new FlowLayout());
+		resume.addActionListener(this);
+		loadGamePanel.add(resume);
 
-		saveGame = new JButton("Save Game");
+		saveGame = new JButton("Save/Pause");
 		JPanel saveGamePanel = new JPanel();
 		saveGamePanel.setLayout(new FlowLayout());
 		saveGame.addActionListener(this);
@@ -215,7 +215,7 @@ public class LaneView implements LaneObserver, ActionListener {
 
 		buttonPanel.add(maintenancePanel);
 		buttonPanel.add(saveGamePanel);
-//		buttonPanel.add(loadGamePanel);
+		buttonPanel.add(loadGamePanel);
 
 		cpanel.add(buttonPanel, "South");
 
@@ -229,12 +229,12 @@ public class LaneView implements LaneObserver, ActionListener {
 
 		else if (e.getSource().equals(saveGame)){
 			lane.saveGame();
+			lane.pauseGame();
 		}
 
-//		else if (e.getSource().equals(loadGame)){
-//			System.out.println("Loading...");
-//			LoadSavedView ls = new LoadSavedView(lane, this);
-//		}
+		else if (e.getSource().equals(resume)){
+			lane.unPauseGame();
+		}
 	}
 
 }
