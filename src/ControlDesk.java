@@ -109,6 +109,21 @@ class ControlDesk extends Thread {// Extends threads - wil provide its own threa
 			cdView.receiveControlDeskEvent(new ControlDeskEvent(partyQueue.getPartyQueueDisplay()));
 	}
 
+	public void assignLane(LaneEvent le){
+		Iterator<Lane> it = lanes.iterator();
+
+		while (it.hasNext()) {
+			Lane curLane = it.next();
+
+			if (!curLane.isPartyAssigned()) {
+				System.out.println("ok... assigning this party");
+				curLane.loadLane(le);
+				break;
+			}
+		}
+		if (cdView != null)
+			cdView.receiveControlDeskEvent(new ControlDeskEvent(partyQueue.getPartyQueueDisplay()));
+	}
     /**
      */
 

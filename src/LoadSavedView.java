@@ -11,8 +11,7 @@ import java.util.*;
 
 public class LoadSavedView implements ActionListener, ListSelectionListener {
 
-    private Lane lane;
-    private LaneView laneView;
+    private ControlDeskView controlDeskView;
     private int maxSize;
     private JFrame win;
     private JButton loadGame;
@@ -21,10 +20,9 @@ public class LoadSavedView implements ActionListener, ListSelectionListener {
     private JList savedStates;
     private String selectedState;
 
-    public LoadSavedView(Lane ln, LaneView lv){
+    public LoadSavedView(ControlDeskView cdv){
 
-        this.lane = ln;
-        this.laneView = lv;
+        controlDeskView = cdv;
         win = new JFrame("Load Game");
         win.getContentPane().setLayout(new BorderLayout());
         ((JPanel) win.getContentPane()).setOpaque(false);
@@ -100,10 +98,9 @@ public class LoadSavedView implements ActionListener, ListSelectionListener {
     public void actionPerformed(ActionEvent e) {
         if(selectedState != null){
             int i = saveStatesStrings.indexOf(selectedState);
+            System.out.println("selected state: " + i);
             LaneEvent le = saveStatesDB.get(i);
-            System.out.println();
-            lane.loadLane(le);
-            laneView.receiveLaneEvent(le);
+            controlDeskView.setLoadedLE(le);
         }
     }
 

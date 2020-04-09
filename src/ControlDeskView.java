@@ -17,7 +17,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.event.*;
 
 import java.util.*;
 
@@ -30,14 +29,18 @@ import java.util.*;
 public class ControlDeskView implements ActionListener, ControlDeskObserver {
 
 	// Class for the Control Desk View
-	private JButton addParty, finished, assign;
+	private JButton addParty, finished, loadGame;
 	private JFrame win;
 	private JList partyList;
-	
+
 	/** The maximum  number of members in a party */
 	private int maxMembers;
-	
+
 	private ControlDesk controlDesk;
+
+	public void setLoadedLE(LaneEvent loadedLE) {
+		controlDesk.assignLane(loadedLE);
+	}
 
 	/**
 	 * Displays a GUI representation of the ControlDesk
@@ -52,7 +55,7 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 
 		win = new JFrame("Control Desk"); // Create a new JFrame 
 		win.getContentPane().setLayout(new BorderLayout()); // Sets a borederlayout
-		((JPanel) win.getContentPane()).setOpaque(false); 
+		((JPanel) win.getContentPane()).setOpaque(false);
 
 		JPanel colPanel = new JPanel();
 		colPanel.setLayout(new BorderLayout());
@@ -69,12 +72,12 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		addPartyPanel.add(addParty);
 		controlsPanel.add(addPartyPanel);
 
-		assign = new JButton("Assign Lanes");
+		loadGame = new JButton("Load Game");
 		JPanel assignPanel = new JPanel();
 		assignPanel.setLayout(new FlowLayout());
-		assign.addActionListener(this);
-		assignPanel.add(assign);
-//		controlsPanel.add(assignPanel);
+		loadGame.addActionListener(this);
+		assignPanel.add(loadGame);
+		controlsPanel.add(assignPanel);
 
 		finished = new JButton("Finished");
 		JPanel finishedPanel = new JPanel();
@@ -97,7 +100,7 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 			curLane.subscribe(laneStat); // Subscribes the lanestat to the current lane
 			((Pinsetter)curLane.getPinsetter()).subscribe(laneStat); // Gets the pinsetter object to subscribe to the lane status object
 			JPanel lanePanel = laneStat.showLane(); // Shows ths lane status
-			lanePanel.setBorder(new TitledBorder("Lane" + ++laneCount )); 
+			lanePanel.setBorder(new TitledBorder("Lane" + ++laneCount ));
 			laneStatusPanel.add(lanePanel);
 		}
 
@@ -128,7 +131,7 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		win.pack();
 
 		/* Close program when this window closes */
-		win.addWindowListener(new WindowAdapter() { 
+		win.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
 			}
@@ -154,14 +157,17 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		if (e.getSource().equals(addParty)) {
 			AddPartyView addPartyWin = new AddPartyView(this, maxMembers); // The view for the AddParty class
 		}
-		if (e.getSource().equals(assign)) {
-			controlDesk.assignLane();
-		}
-		if (e.getSource().equals(finished)) {
+
+		else if (e.getSource().equals(finished)) {
 			win.hide(); // hide() is depracated
 			System.exit(0);
 		}
+		else if (e.getSource().equals(loadGame)){
+			System.out.println("Loading...");
+			LoadSavedView ls = new LoadSavedView(this);
+		}
 	}
+
 
 	/**
 	 * Receive a new party from andPartyView.

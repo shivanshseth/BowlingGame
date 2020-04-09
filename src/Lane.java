@@ -184,15 +184,20 @@ public class Lane extends Thread implements PinsetterObserver {
 	}
 	public void loadLane(LaneEvent le) {
 //		this.pauseGame();
-//		party = le.getParty();
-//		bowlIndex = le.getIndex();
-//		currentThrower = le.getBowler();
-//		cumulScores = le.getCumulScore();
-//		scores = le.getScore();
-//		frameNumber = le.getFrameNum();
-//		ball = le.getBall();
-		gameIsHalted = true;
+		party = le.getParty();
+
+		resetBowlerIterator();
 		partyAssigned = true;
+		bowlIndex = le.getIndex();
+		currentThrower = le.getBowler();
+		cumulScores = le.getCumulScore();
+		scores = le.getScore();
+		gameNumber=0;
+		ball = le.getBall();
+		gameIsHalted = false;
+		gameFinished = false;
+		frameNumber = le.getFrameNum() -1;
+
 	}
 
 	/** run()

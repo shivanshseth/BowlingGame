@@ -28,9 +28,16 @@ public class LaneView implements LaneObserver, ActionListener {
 
 	JButton maintenance, loadGame, saveGame;
 	Lane lane;
+	int callNo= 0;
+
+	public int getLaneNum() {
+		return laneNum;
+	}
+
+	int laneNum;
 
 	public LaneView(Lane lane, int laneNum) {
-
+		this.laneNum = laneNum;
 		this.lane = lane;
 
 		initDone = true;
@@ -121,7 +128,6 @@ public class LaneView implements LaneObserver, ActionListener {
 		initDone = true;
 		return panel;
 	}
-
 	public void receiveLaneEvent(LaneEvent le) {
 		if (lane.isPartyAssigned()) {
 			int numBowlers = le.getParty().getMembers().size();
@@ -135,10 +141,9 @@ public class LaneView implements LaneObserver, ActionListener {
 
 			if (le.getFrameNum() == 1
 				&& le.getBall() == 0
-				&& le.getIndex() == 0) {
+				&& le.getIndex() == 0 || callNo == 0) {
 				makeFrame(le);
 			}
-
 			int[][] lescores = le.getCumulScore();
 			for (int k = 0; k < numBowlers; k++) {
 				for (int i = 0; i <= le.getFrameNum() - 1; i++) {
@@ -148,9 +153,7 @@ public class LaneView implements LaneObserver, ActionListener {
 							(new Integer(lescores[k][i])).toString());
 				}
 				for (int i = 0; i < 21; i++) {
-					if (((int[]) ((HashMap) le.getScore())
-						.get(bowlers.get(k)))[i]
-						!= -1)
+					if (((int[]) ((HashMap) le.getScore()).get(bowlers.get(k)))[i] != -1)
 						if (((int[]) ((HashMap) le.getScore())
 							.get(bowlers.get(k)))[i]
 							== 10
@@ -176,11 +179,12 @@ public class LaneView implements LaneObserver, ActionListener {
 									.toString());
 				}
 			}
+			callNo++;
 
 		}
 	}
 
-	private void makeFrame(LaneEvent le) {
+	public void makeFrame(LaneEvent le) {
 		System.out.println("Making the frame.");
 		cpanel.removeAll();
 		cpanel.add(makeFrame(le.getParty()), "Center");
@@ -197,11 +201,11 @@ public class LaneView implements LaneObserver, ActionListener {
 		maintenance.addActionListener(this);
 		maintenancePanel.add(maintenance);
 
-		loadGame = new JButton("Load Game");
-		JPanel loadGamePanel = new JPanel();
-		loadGamePanel.setLayout(new FlowLayout());
-		loadGame.addActionListener(this);
-		loadGamePanel.add(loadGame);
+//		loadGame = new JButton("Load Game");
+//		JPanel loadGamePanel = new JPanel();
+//		loadGamePanel.setLayout(new FlowLayout());
+//		loadGame.addActionListener(this);
+//		loadGamePanel.add(loadGame);
 
 		saveGame = new JButton("Save Game");
 		JPanel saveGamePanel = new JPanel();
@@ -211,7 +215,7 @@ public class LaneView implements LaneObserver, ActionListener {
 
 		buttonPanel.add(maintenancePanel);
 		buttonPanel.add(saveGamePanel);
-		buttonPanel.add(loadGamePanel);
+//		buttonPanel.add(loadGamePanel);
 
 		cpanel.add(buttonPanel, "South");
 
@@ -227,10 +231,10 @@ public class LaneView implements LaneObserver, ActionListener {
 			lane.saveGame();
 		}
 
-		else if (e.getSource().equals(loadGame)){
-			System.out.println("Loading...");
-			LoadSavedView ls = new LoadSavedView(lane, this);
-		}
+//		else if (e.getSource().equals(loadGame)){
+//			System.out.println("Loading...");
+//			LoadSavedView ls = new LoadSavedView(lane, this);
+//		}
 	}
 
 }
